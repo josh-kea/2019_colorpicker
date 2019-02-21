@@ -76,8 +76,8 @@ function showColorInfo( rgb ) {
 
 // The function below is the function that is being called when the mouse is being moved over the canvas, because of the event listener called 'mousemove'
     function mouseMoved(event){ 
-        console.log("y:" + event.layerX);
-        console.log("x:" + event.layerY);
+        console.log("y:" + event.offsetX);
+        console.log("x:" + event.offsetY);
        
 
         /* DOESNT WORK BECAUSE clientX and clientY values returned from the event is for the entire window
@@ -86,8 +86,8 @@ function showColorInfo( rgb ) {
         */
 
         //Below works, because is it getting the x and y from the canvas layer only.
-       mouseOverCanvasX = event.layerX;
-       mouseOverCanvasY = event.layerY;
+       mouseOverCanvasX = event.offsetX;
+       mouseOverCanvasY = event.offsetY;
 
        ctx.putImageData(originalImageData, 0, 0);
        ctx.rect(mouseOverCanvasX - 7.5, mouseOverCanvasY -5, 15, 10);
@@ -106,7 +106,7 @@ function showColorInfo( rgb ) {
        canvasR = imageData.data[0];
        canvasG = imageData.data[1];
        canvasB = imageData.data[2];  
-
+       
        console.log(pixelIndex)
        
        rgb.r = canvasR;
