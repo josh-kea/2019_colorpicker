@@ -1,6 +1,6 @@
 #imageCanvas {
     border: 2px solid black;
-    cursor: none;
+    
 }
 
 #sidebyside {
@@ -41,4 +41,9 @@
 #hex {
     margin-top: 4px;
     text-transform: uppercase;
+}
+
+#rectangleCanvas {
+    position:absolute;
+    z-index:200;
 }
