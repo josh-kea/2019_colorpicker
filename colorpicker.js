@@ -16,12 +16,15 @@ function showColorInfo( rgb ) {
     document.querySelector("#colorbox").style.backgroundColor = hex;
 }
 
+    let image;
     let canvas;
     let ctx;
       //Declaring global variables to contain reference to the X and Y values of the mouse when it is moved over the canvas
 
       let mouseOverCanvasX;
       let mouseOverCanvasY;
+
+      let originalImageData;
   
       // Creating new canvas for small rectangle around mouse
       let ctxZoom = document.getElementById('zoomCanvas').getContext('2d');
@@ -29,7 +32,10 @@ function showColorInfo( rgb ) {
       let canvasR;
       let canvasG;
       let canvasB;
-      let rgb;
+      let rgb = {r,g,b};
+
+      let w;
+      let h;
     
    
     window.addEventListener("load", init);
@@ -37,19 +43,32 @@ function showColorInfo( rgb ) {
     function init (){
         
         draw();
+        
     }
 
     function draw(){
         canvas = document.getElementById('imageCanvas');
         ctx = canvas.getContext('2d');
+        //Getting height and width from the canvas
+        w = canvas.width;
+        h = canvas.height;
+        console.log(w)
 
-        let image = new Image();
+        image = new Image();
         image.onload = function(){
             ctx.drawImage(image, 0, 0);
+            
+            originalImageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+            console.log("original"+ originalImageData);
+            
         };
+        
 
         image.src = "cat.jpg";
         canvas.addEventListener('mousemove', mouseMoved);
+        
+
+        
     }
 
   
@@ -59,6 +78,7 @@ function showColorInfo( rgb ) {
     function mouseMoved(event){ 
         console.log("y:" + event.layerX);
         console.log("x:" + event.layerY);
+       
 
         /* DOESNT WORK BECAUSE clientX and clientY values returned from the event is for the entire window
         mouseOverCanvasX = event.clientX;
@@ -69,21 +89,35 @@ function showColorInfo( rgb ) {
        mouseOverCanvasX = event.layerX;
        mouseOverCanvasY = event.layerY;
 
+       ctx.putImageData(originalImageData, 0, 0);
        ctx.rect(mouseOverCanvasX - 7.5, mouseOverCanvasY -5, 15, 10);
        ctx.stroke();
        ctx.strokeStyle = "green";
 
-       ctxZoom.fill();
+      
 
-       let imageData = ctx.getImageData(mouseOverCanvasX -7.5, mouseOverCanvasY -5, 15, 10);
+       let imageData = ctx.getImageData(mouseOverCanvasX, mouseOverCanvasY, w, h);
        ctxZoom.putImageData(imageData, 0, 0);
 
-       console.log(imageData)
+       console.log("image data" + imageData.data.length)
+
+       let pixelIndex = (4 * (mouseOverCanvasX + mouseOverCanvasY * w))
 
        canvasR = imageData.data[0];
        canvasG = imageData.data[1];
-       canvasB = imageData.data[2];     
+       canvasB = imageData.data[2];  
+
+       console.log(pixelIndex)
        
+       rgb.r = canvasR;
+       rgb.g = canvasG;
+       rgb.b = canvasB;
+
+       showColorInfo(rgb);
+       
+       console.log("hello" + canvasR);
+      
     }
+
 
     
